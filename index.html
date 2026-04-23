@@ -345,15 +345,13 @@ function parseOrionTasks(wb){
     const r=rows[i];if(!r||!r[col['Task Id*']])continue;
     const status=qc(r[col['Status*']]);
     const wave=qc(r[col['Wave*']]);
-    const appsRaw=r[col['Applications*']];
-    if(!appsRaw)continue;
+    const app=qc(r[11]);// col L = primary/owning application
+    if(!app)continue;
     const isComplete=status==='Complete';
     const isBw1=wave==='Build Wave 1';
-    String(appsRaw).split(';').map(qc).filter(Boolean).forEach(app=>{
-      if(!apps[app])apps[app]={total:0,bw1:0};
-      if(!isComplete)apps[app].total++;
-      if(isBw1&&!isComplete)apps[app].bw1++;
-    });
+    if(!apps[app])apps[app]={total:0,bw1:0};
+    if(!isComplete)apps[app].total++;
+    if(isBw1&&!isComplete)apps[app].bw1++;
   }
   return apps;
 }
